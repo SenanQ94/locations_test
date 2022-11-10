@@ -8,9 +8,9 @@ class LocationsViewModel {
 
   LocationsViewModel({this.locationsRepository});
 
-  Future<List<LocationViewModel>> fetchAllPost(String? suchText) async {
+  Future<List<LocationViewModel>> searchByName(String? suchText) async {
     List<LocationModel> listOfLocations =
-        await locationsRepository!.getAllLocations(suchText);
+        await locationsRepository!.getLocationByName(suchText);
 
     return listOfLocations
         .map((location) => LocationViewModel(locationModel: location))

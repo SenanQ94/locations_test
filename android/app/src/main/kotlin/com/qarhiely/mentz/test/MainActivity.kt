@@ -1,4 +1,4 @@
-package com.example.mvvm
+package com.qarhiely.mentz.test
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -18,7 +18,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
   Widget build(BuildContext context) {
     var locationViewModel =
         LocationsViewModel(locationsRepository: LocationsApi());
-    //var posts = postViewModel.fetchAllPost() as List;
+
     return Scaffold(
       appBar: _searchBoolean
           ? AppBar(
@@ -31,6 +31,9 @@ class _LocationsScreenState extends State<LocationsScreen> {
                 ),
                 child: Center(
                   child: TextField(
+                    keyboardType: TextInputType.streetAddress,
+                    textInputAction: TextInputAction.search,
+                    textCapitalization: TextCapitalization.sentences,
                     controller: _searchController,
                     autofocus: true,
                     onChanged: (String text) {
@@ -39,18 +42,19 @@ class _LocationsScreenState extends State<LocationsScreen> {
                       });
                     },
                     decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.search),
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.clear),
-                          onPressed: () {
-                            setState(() {
-                              _searchBoolean = false;
-                              _searchController.clear();
-                            });
-                          },
-                        ),
-                        hintText: 'Search...',
-                        border: InputBorder.none),
+                      prefixIcon: const Icon(Icons.search),
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          setState(() {
+                            _searchBoolean = false;
+                            _searchController.clear();
+                          });
+                        },
+                      ),
+                      hintText: 'Search...',
+                      // border: InputBorder.none,
+                    ),
                   ),
                 ),
               ),
@@ -69,27 +73,31 @@ class _LocationsScreenState extends State<LocationsScreen> {
             ),
       body: Center(
         child: FutureBuilder<List<LocationViewModel>>(
-            future: locationViewModel.fetchAllPost(suchText),
+            future: locationViewModel.searchByName(suchText),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
+                return const Center(child: CircularProgressIndicator());
               } else {
                 var locations = snapshot.data;
-                var num = locations?.length;
+
                 return ListView.builder(
                   itemCount: locations?.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return ListTile(
-                      trailing: Column(
-                        children: [
-                          Text('number $num'),
-                          Icon(locations![index].isBest
-                              ? Icons.thumb_up
-                              : Icons.thumb_down)
-                        ],
+                    return Card(
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          backgroundColor: Colors.pink,
+                          child: Text('#${index + 1}'),
+                        ),
+                        trailing: locations![index].isBest
+                            ? const Text(
+                                'The best',
+                                style: TextStyle(color: Colors.blue),
+                              )
+                            : null,
+                        title: Text(locations[index].name),
+                        subtitle: Text('Type: ${locations[index].type}'),
                       ),
-                      title: Text(locations[index].name),
-                      subtitle: Text(locations[index].type),
                     );
                   },
                 );

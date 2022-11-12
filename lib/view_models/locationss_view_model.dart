@@ -1,19 +1,27 @@
+import 'package:mvvm/repositories/locations_api.dart';
+
 import '../models/location_model.dart';
-import '../repositories/locations_repo.dart';
-import '../view_models/location_view_model.dart';
 
 class LocationsViewModel {
   String title = 'Posts Page';
-  LocationsRepository? locationsRepository;
+  LocationsApi? locationsApi;
 
-  LocationsViewModel({this.locationsRepository});
+  LocationsViewModel({this.locationsApi});
 
-  Future<List<LocationViewModel>> searchByName(String? suchText) async {
+  Future<List<LocationModel>> searchByName(String? suchText) async {
     List<LocationModel> listOfLocations =
-        await locationsRepository!.getLocationByName(suchText);
+        await locationsApi!.getLocationByName(suchText);
 
     return listOfLocations
-        .map((location) => LocationViewModel(locationModel: location))
+        .map((location) => LocationModel(
+              id: location.id,
+              name: location.name,
+              coord: location.coord,
+              type: location.type,
+              matchQuality: location.matchQuality,
+              isBest: location.isBest,
+              parent: location.parent,
+            ))
         .toList();
   }
 }

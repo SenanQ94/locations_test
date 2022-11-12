@@ -1,32 +1,31 @@
-// ignore_for_file: avoid_print
-
 import 'package:dio/dio.dart';
 
+import '../network.dart';
 import '../models/location_model.dart';
-import '../repositories/locations_repo.dart';
 
-class LocationsApi extends LocationsRepository {
-  @override
+class LocationsApi {
   Future<List<LocationModel>> getLocationByName(String? suchText) async {
     List<LocationModel> locations = [];
+    //define request params
+    Map<String, dynamic> queryparams = {
+      'language': 'de',
+      'outputFormat': 'RapidJSON',
+      'type_sf': 'any',
+      'name_sf': suchText,
+    };
     try {
-      var response = await Dio().get(
-          'https://mvvvip1.defas-fgi.de/mvv/XML_STOPFINDER_REQUEST?language=de&outputFormat=RapidJSON&type_sf=any&name_sf={$suchText}');
-
-      var res = response.data as Map<String, dynamic>;
-      var locationsList = res['locations'] as List;
+      //connecting to the API
+      var response = await Dio().get(apiBaseURL, queryParameters: queryparams);
+      var locationsList = response.data['locations'] as List;
       locations = locationsList
-          .map((location) => LocationModel.getJson(location))
+          .map((location) => LocationModel.createFromJSON(location))
           .toList();
+      // sort the locations according to matchQuality values
+      locations.sort((a, b) => b.matchQuality!.compareTo(a.matchQuality!));
     } catch (e) {
       print(e);
     }
 
     return locations;
   }
-
-  // @override
-  // Future<LocationModel> getPostById(int id) {
-  //   throw UnimplementedError();
-  // }
 }

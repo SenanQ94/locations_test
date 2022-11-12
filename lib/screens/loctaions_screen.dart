@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import '../repositories/locations_api.dart';
-import '../view_models/location_view_model.dart';
+import 'package:mvvm/constans.dart';
+import 'package:mvvm/repositories/locations_api.dart';
+
+import '../models/location_model.dart';
 import '../view_models/locationss_view_model.dart';
+import '../widgets/location_widget.dart';
 
 class LocationsScreen extends StatefulWidget {
   const LocationsScreen({Key? key}) : super(key: key);
@@ -16,8 +19,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
   String? suchText;
   @override
   Widget build(BuildContext context) {
-    var locationViewModel =
-        LocationsViewModel(locationsRepository: LocationsApi());
+    var locationsViewModel = LocationsViewModel(locationsApi: LocationsApi());
 
     return Scaffold(
       appBar: _searchBoolean
@@ -26,7 +28,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
                 width: double.infinity,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  //color: kScaffoldColor,
                   borderRadius: BorderRadius.circular(5),
                 ),
                 child: Center(
@@ -53,7 +55,6 @@ class _LocationsScreenState extends State<LocationsScreen> {
                         },
                       ),
                       hintText: 'Search...',
-                      // border: InputBorder.none,
                     ),
                   ),
                 ),
@@ -61,6 +62,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
             )
           : AppBar(
               title: const Text('Search for Location'),
+              //backgroundColor: kScaffoldColor,
               actions: [
                 IconButton(
                     onPressed: () {
@@ -72,34 +74,31 @@ class _LocationsScreenState extends State<LocationsScreen> {
               ],
             ),
       body: Center(
-        child: FutureBuilder<List<LocationViewModel>>(
-            future: locationViewModel.searchByName(suchText),
+        child: FutureBuilder<List<LocationModel>>(
+            future: locationsViewModel.searchByName(suchText),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
-              } else {
-                var locations = snapshot.data;
-
+              }
+              if (snapshot.hasData) {
+                var locations = snapshot.data as List;
+                if (locations.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      'Sorry, we did not find what you search for. \n Please check your search text.',
+                      textAlign: TextAlign.center,
+                    ),
+                  );
+                }
                 return ListView.builder(
-                  itemCount: locations?.length,
+                  itemCount: locations.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return Card(
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: Colors.pink,
-                          child: Text('#${index + 1}'),
-                        ),
-                        trailing: locations![index].isBest
-                            ? const Text(
-                                'The best',
-                                style: TextStyle(color: Colors.blue),
-                              )
-                            : null,
-                        title: Text(locations[index].name),
-                        subtitle: Text('Type: ${locations[index].type}'),
-                      ),
-                    );
+                    return LocationWidget(locations[index]);
                   },
+                );
+              } else {
+                return const Center(
+                  child: Text('Something went wrong, Please try again later!'),
                 );
               }
             }),

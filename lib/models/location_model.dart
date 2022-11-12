@@ -17,7 +17,7 @@ class LocationModel {
     this.parent,
   });
 
-  LocationModel.getJson(Map<String, dynamic> json) {
+  LocationModel.createFromJSON(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     coord = json['coord'];

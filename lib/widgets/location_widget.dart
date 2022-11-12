@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mvvm/constans.dart';
 import '../models/location_model.dart';
 
 class LocationWidget extends StatefulWidget {
@@ -12,36 +13,22 @@ class LocationWidget extends StatefulWidget {
 
 class _LocationWidgetState extends State<LocationWidget> {
   bool _isExpanded = false;
-  Widget _getIcon(String? type) {
+  IconData _getIcon(String? type) {
     switch (type) {
       case 'street':
-        return Icon(
-          Icons.add_road_outlined,
-          color: Colors.blueAccent,
-        );
+        return Icons.add_road_outlined;
+
       case 'suburb':
-        return Icon(
-          Icons.location_city,
-          color: Colors.blueAccent,
-        );
+        return Icons.location_city;
 
       case 'poi':
-        return Icon(
-          Icons.my_location_outlined,
-          color: Colors.blueAccent,
-        );
+        return Icons.my_location_outlined;
 
       case 'stop':
-        return Icon(
-          Icons.traffic_outlined,
-          color: Colors.blueAccent,
-        );
+        return Icons.traffic_outlined;
 
       default:
-        return Icon(
-          Icons.location_on_outlined,
-          color: Colors.blueAccent,
-        );
+        return Icons.location_on_outlined;
     }
   }
 
@@ -56,41 +43,45 @@ class _LocationWidgetState extends State<LocationWidget> {
           physics: NeverScrollableScrollPhysics(),
           children: <Widget>[
             ListTile(
-              tileColor:
-                  widget.location.isBest == true ? Colors.amber[100] : null,
-              leading: FittedBox(
-                alignment: Alignment.center,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  //crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
+              leading: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
                     _getIcon(widget.location.type),
-                    FittedBox(
-                      fit: BoxFit.fitWidth,
-                      child: Text(
-                        '${widget.location.type!.toUpperCase()}',
-                        style: TextStyle(fontSize: 12),
-                        textAlign: TextAlign.justify,
-                        softWrap: true,
-                      ),
-                    ),
-                  ],
-                ),
+                    color: kIconsColor,
+                    size: kDefaultIconSize,
+                  ),
+                  Text(
+                    '${widget.location.type!.toUpperCase()}',
+                    style: TextStyle(fontSize: 8),
+                    //textAlign: TextAlign.justify,
+                    softWrap: true,
+                  ),
+                ],
               ),
               title: Text('${widget.location.name}'),
               subtitle: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                      'Coords: (${widget.location.coord![0]} , ${widget.location.coord![1]})'),
+                  Flexible(
+                    flex: 8,
+                    fit: FlexFit.tight,
+                    child: Text(
+                        'Coords: (${widget.location.coord![0]} , ${widget.location.coord![1]})'),
+                  ),
                   if (widget.location.isBest == true)
-                    Text(
-                      'The Best',
-                      style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.blueGrey,
-                          fontStyle: FontStyle.italic,
-                          fontWeight: FontWeight.bold),
+                    Flexible(
+                      flex: 2,
+                      fit: FlexFit.tight,
+                      child: Text(
+                        'The Best',
+                        style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.blueGrey,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.bold),
+                      ),
                     )
                 ],
               ),

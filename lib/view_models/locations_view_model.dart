@@ -1,5 +1,4 @@
-import 'package:mvvm/repositories/locations_api.dart';
-
+import '../repositories/locations_api.dart';
 import '../models/location_model.dart';
 
 class LocationsViewModel {

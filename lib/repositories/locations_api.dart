@@ -21,12 +21,15 @@ class LocationsApi {
       locations = locationsList
           .map((location) => LocationModel.createFromJSON(location))
           .toList();
-      // sort the locations according to matchQuality values
-      locations.sort((a, b) => b.matchQuality!.compareTo(a.matchQuality!));
 
-      //put best match at first
-      var index = locations.indexWhere((location) => location.isBest == true);
-      locations.swap(0, index);
+      if (locations.isNotEmpty) {
+        // sort the locations according to matchQuality values
+        locations.sort((a, b) => b.matchQuality!.compareTo(a.matchQuality!));
+
+        //put best match at first
+        var index = locations.indexWhere((location) => location.isBest == true);
+        locations.swap(0, index);
+      }
     } catch (e) {
       print(e);
     }

@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mvvm/providers/theme_provider.dart';
-import 'package:provider/provider.dart';
 
 import '../constans.dart';
 import '../models/location_model.dart';
@@ -67,26 +65,19 @@ class _LocationWidgetState extends State<LocationWidget> {
                   ],
                 ),
                 title: Text('${widget.location.name}'),
-                subtitle: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                subtitle: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Flexible(
-                      flex: 8,
-                      fit: FlexFit.tight,
-                      child: Text(
-                          'Coords: (${widget.location.coord![0]} , ${widget.location.coord![1]})'),
-                    ),
+                    Text(
+                        'Coords: (${widget.location.coord![0]} , ${widget.location.coord![1]})'),
                     if (widget.location.isBest == true)
-                      Flexible(
-                        flex: 2,
-                        fit: FlexFit.tight,
-                        child: Text(
-                          'The Best',
-                          style: TextStyle(
-                              fontSize: 10,
-                              fontStyle: FontStyle.italic,
-                              fontWeight: FontWeight.bold),
-                        ),
+                      Text(
+                        'The Best',
+                        style: TextStyle(
+                            fontSize: 10,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.bold),
                       )
                   ],
                 ),
@@ -104,7 +95,6 @@ class _LocationWidgetState extends State<LocationWidget> {
             ),
             AnimatedContainer(
               duration: Duration(milliseconds: 300),
-              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 4),
               height: _isExpanded ? 60 : 0,
               child: ListView(
                 children: [
@@ -118,23 +108,27 @@ class _LocationWidgetState extends State<LocationWidget> {
                     ),
                     Expanded(child: Divider()),
                   ]),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        widget.location.parent!['name'],
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: kDefaultPadding * 3),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          widget.location.parent!['name'],
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      Text(
-                        widget.location.parent!['type'],
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
-                      )
-                    ],
+                        Text(
+                          widget.location.parent!['type'],
+                          style: TextStyle(
+                            fontSize: 14,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ],
               ),

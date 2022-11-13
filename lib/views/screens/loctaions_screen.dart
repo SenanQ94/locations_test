@@ -16,15 +16,10 @@ import '../../view_models/locations_view_model.dart';
 class LocationsScreen extends StatelessWidget {
   var locationsViewModel = LocationsViewModel(locationsApi: LocationsApi());
   String? suchText;
-  // get Locations by taking the value of 'suchText' from SearchProvider and pass it to search
-  // methode in locationsViewModel
-  Future<List<LocationModel>> _getLocations(BuildContext context) {
-    suchText = Provider.of<SearchProvider>(context).suchText;
-    return locationsViewModel.searchByName(suchText);
-  }
 
   @override
   Widget build(BuildContext context) {
+    suchText = Provider.of<SearchProvider>(context).suchText;
     return SafeArea(
       child: Scaffold(
         appBar: PreferredSize(
@@ -39,8 +34,19 @@ class LocationsScreen extends StatelessWidget {
         body: Padding(
           padding: const EdgeInsets.only(top: kDefaultPadding / 2),
           child: FutureBuilder<List<LocationModel>>(
-              future: _getLocations(context),
+              future: suchText == ''
+                  ? null
+                  : locationsViewModel.searchByName(suchText),
               builder: (context, snapshot) {
+                if (suchText == '') {
+                  return const Center(
+                    child: const Text(
+                      'Start searching for new Locations',
+                      textAlign: TextAlign.center,
+                    ),
+                  );
+                }
+
                 // check connectiong state
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());

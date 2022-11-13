@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../constans.dart';
-import '../providers/theme_provider.dart';
-import '../providers/search_provider.dart';
+import '../../consts/constans.dart';
+import '../../providers/theme_provider.dart';
+import '../../providers/search_provider.dart';
 
 class MyAppBar extends StatelessWidget {
   @override
@@ -18,6 +18,7 @@ class MyAppBar extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                // change the Theme by connecting to ThemeProvider and call toggleTheme()
                 IconButton(
                   onPressed: () {
                     themeNotifier.toggleTheme();
@@ -36,6 +37,9 @@ class MyAppBar extends StatelessWidget {
                       .titleLarge!
                       .copyWith(color: kAppBarElementsColor),
                 ),
+
+                // show about me Dialog
+
                 IconButton(
                     onPressed: () {
                       showDialog(
@@ -69,6 +73,8 @@ class MyAppBar extends StatelessWidget {
                 color: themeNotifier.darkTheme ? kSearchBgDark : kSearchBgLight,
                 borderRadius: BorderRadius.circular(kDefaultRadius),
               ),
+
+              // search input textField
               child: Center(
                 child: TextField(
                   keyboardType: TextInputType.streetAddress,

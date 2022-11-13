@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../constans.dart';
-import '../models/location_model.dart';
+import '../../consts/constans.dart';
+import '../../models/location_model.dart';
 
 class LocationWidget extends StatefulWidget {
   final LocationModel location;
@@ -14,6 +14,8 @@ class LocationWidget extends StatefulWidget {
 
 class _LocationWidgetState extends State<LocationWidget> {
   bool _isExpanded = false;
+
+  // set Icon according to the Type of the location
   IconData _getIcon(String? type) {
     switch (type) {
       case 'street':
@@ -49,6 +51,9 @@ class _LocationWidgetState extends State<LocationWidget> {
                   _isExpanded = !_isExpanded;
                 });
               },
+
+              // show the basic information about the location
+
               child: ListTile(
                 leading: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -93,6 +98,9 @@ class _LocationWidgetState extends State<LocationWidget> {
                 ),
               ),
             ),
+
+            // show extra information about the parent of the location
+
             AnimatedContainer(
               duration: Duration(milliseconds: 300),
               height: _isExpanded ? 60 : 0,

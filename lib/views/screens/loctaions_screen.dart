@@ -1,28 +1,24 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
 
-import '../constans.dart';
+import '../../consts/constans.dart';
 import '../widgets/my_appBar.dart';
-import '../models/location_model.dart';
+import '../../models/location_model.dart';
 import '../widgets/location_widget.dart';
-import '../providers/theme_provider.dart';
-import '../providers/search_provider.dart';
-import '../repositories/locations_api.dart';
-import '../view_models/locations_view_model.dart';
+import '../../providers/theme_provider.dart';
+import '../../providers/search_provider.dart';
+import '../../repositories/locations_api.dart';
+import '../../view_models/locations_view_model.dart';
 
-class LocationsScreen extends StatefulWidget {
-  const LocationsScreen({Key? key}) : super(key: key);
-
-  @override
-  State<LocationsScreen> createState() => _LocationsScreenState();
-}
-
-class _LocationsScreenState extends State<LocationsScreen> {
+class LocationsScreen extends StatelessWidget {
   var locationsViewModel = LocationsViewModel(locationsApi: LocationsApi());
   String? suchText;
-
-  Future<List<LocationModel>> _getLocations() {
+  // get Locations by taking the value of 'suchText' from SearchProvider and pass it to search
+  // methode in locationsViewModel
+  Future<List<LocationModel>> _getLocations(BuildContext context) {
     suchText = Provider.of<SearchProvider>(context).suchText;
     return locationsViewModel.searchByName(suchText);
   }
@@ -43,13 +39,18 @@ class _LocationsScreenState extends State<LocationsScreen> {
         body: Padding(
           padding: const EdgeInsets.only(top: kDefaultPadding / 2),
           child: FutureBuilder<List<LocationModel>>(
-              future: _getLocations(),
+              future: _getLocations(context),
               builder: (context, snapshot) {
+                // check connectiong state
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }
+
+                // check if we have returned data
                 if (snapshot.hasData) {
                   var locations = snapshot.data as List;
+
+                  // check if the search result is an empty list
                   if (locations.isEmpty) {
                     return const Center(
                       child: const Text(
@@ -58,6 +59,8 @@ class _LocationsScreenState extends State<LocationsScreen> {
                       ),
                     );
                   }
+                  // check if the search result is not an empty list
+                  // and build the list view with returned data
                   return ListView.builder(
                     itemCount: locations.length,
                     itemBuilder: (BuildContext context, int index) {
@@ -65,6 +68,7 @@ class _LocationsScreenState extends State<LocationsScreen> {
                     },
                   );
                 } else {
+                  // show a messege if an error happend
                   return const Center(
                     child: const Text(
                         'Something went wrong, Please try again later!'),

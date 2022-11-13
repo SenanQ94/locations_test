@@ -2,10 +2,11 @@ import '../repositories/locations_api.dart';
 import '../models/location_model.dart';
 
 class LocationsViewModel {
-  String title = 'Posts Page';
   LocationsApi? locationsApi;
 
   LocationsViewModel({this.locationsApi});
+
+  //pass data between the view and the model
 
   Future<List<LocationModel>> searchByName(String? suchText) async {
     List<LocationModel> listOfLocations =

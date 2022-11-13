@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import './screens/loctaions_screen.dart';
+import 'views/screens/loctaions_screen.dart';
 import './providers/theme_provider.dart';
 import '../providers/search_provider.dart';
 
@@ -12,6 +12,7 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // connect with the 2 Providers we have
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -22,6 +23,7 @@ class App extends StatelessWidget {
         ),
       ],
       child: Consumer2<ThemeNotifier, SearchProvider>(
+        // child property to prevent th main screen from rebuilding and sending request to API when changing the Theme
         child: LocationsScreen(),
         builder:
             (context, ThemeNotifier notifier, SearchProvider search, child) {

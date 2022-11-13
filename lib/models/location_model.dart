@@ -1,3 +1,5 @@
+// create model to handle the location data
+
 class LocationModel {
   String? id;
   String? name;

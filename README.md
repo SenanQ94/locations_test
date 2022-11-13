@@ -1,4 +1,4 @@
-# mvvm
+# Mentz test
 
 A new Flutter project.
 

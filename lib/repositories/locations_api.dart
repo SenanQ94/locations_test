@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:collection/collection.dart';
 
 import '../network.dart';
 import '../models/location_model.dart';
@@ -22,10 +23,13 @@ class LocationsApi {
           .toList();
       // sort the locations according to matchQuality values
       locations.sort((a, b) => b.matchQuality!.compareTo(a.matchQuality!));
+
+      //put best match at first
+      var index = locations.indexWhere((location) => location.isBest == true);
+      locations.swap(0, index);
     } catch (e) {
       print(e);
     }
-
     return locations;
   }
 }

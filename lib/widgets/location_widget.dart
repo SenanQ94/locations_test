@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mvvm/constans.dart';
+import 'package:mvvm/providers/theme_provider.dart';
+import 'package:provider/provider.dart';
+
+import '../constans.dart';
 import '../models/location_model.dart';
 
 class LocationWidget extends StatefulWidget {
@@ -38,62 +41,65 @@ class _LocationWidgetState extends State<LocationWidget> {
       duration: Duration(milliseconds: 300),
       height: _isExpanded ? 160 : 100,
       child: Card(
-        margin: EdgeInsets.all(5),
+        margin: EdgeInsets.all(kDefaultPadding / 2),
         child: ListView(
           physics: NeverScrollableScrollPhysics(),
           children: <Widget>[
-            ListTile(
-              leading: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(
-                    _getIcon(widget.location.type),
-                    color: kIconsColor,
-                    size: kDefaultIconSize,
-                  ),
-                  Text(
-                    '${widget.location.type!.toUpperCase()}',
-                    style: TextStyle(fontSize: 8),
-                    //textAlign: TextAlign.justify,
-                    softWrap: true,
-                  ),
-                ],
-              ),
-              title: Text('${widget.location.name}'),
-              subtitle: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    flex: 8,
-                    fit: FlexFit.tight,
-                    child: Text(
-                        'Coords: (${widget.location.coord![0]} , ${widget.location.coord![1]})'),
-                  ),
-                  if (widget.location.isBest == true)
+            InkWell(
+              onTap: () {
+                setState(() {
+                  _isExpanded = !_isExpanded;
+                });
+              },
+              child: ListTile(
+                leading: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(
+                      _getIcon(widget.location.type),
+                      size: kDefaultIconSize,
+                    ),
+                    Text(
+                      '${widget.location.type!.toUpperCase()}',
+                      style: TextStyle(fontSize: 8),
+                    ),
+                  ],
+                ),
+                title: Text('${widget.location.name}'),
+                subtitle: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
                     Flexible(
-                      flex: 2,
+                      flex: 8,
                       fit: FlexFit.tight,
                       child: Text(
-                        'The Best',
-                        style: TextStyle(
-                            fontSize: 10,
-                            color: Colors.blueGrey,
-                            fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    )
-                ],
-              ),
-              trailing: IconButton(
-                icon: _isExpanded
-                    ? Icon(Icons.expand_less)
-                    : Icon(Icons.expand_more),
-                onPressed: () {
-                  setState(() {
-                    _isExpanded = !_isExpanded;
-                  });
-                },
+                          'Coords: (${widget.location.coord![0]} , ${widget.location.coord![1]})'),
+                    ),
+                    if (widget.location.isBest == true)
+                      Flexible(
+                        flex: 2,
+                        fit: FlexFit.tight,
+                        child: Text(
+                          'The Best',
+                          style: TextStyle(
+                              fontSize: 10,
+                              fontStyle: FontStyle.italic,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      )
+                  ],
+                ),
+                trailing: IconButton(
+                  icon: _isExpanded
+                      ? Icon(Icons.expand_less)
+                      : Icon(Icons.expand_more),
+                  onPressed: () {
+                    setState(() {
+                      _isExpanded = !_isExpanded;
+                    });
+                  },
+                ),
               ),
             ),
             AnimatedContainer(
@@ -108,7 +114,6 @@ class _LocationWidgetState extends State<LocationWidget> {
                       padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: Icon(
                         Icons.arrow_downward_sharp,
-                        color: Colors.blue,
                       ),
                     ),
                     Expanded(child: Divider()),
@@ -127,7 +132,6 @@ class _LocationWidgetState extends State<LocationWidget> {
                         widget.location.parent!['type'],
                         style: TextStyle(
                           fontSize: 14,
-                          color: Colors.grey,
                         ),
                       )
                     ],
